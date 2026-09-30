@@ -1,0 +1,33 @@
+[general]
+name=HydroNet Studio
+
+qgisMinimumVersion=4.0
+qgisMaximumVersion=4.99
+
+description=Estrae da un DTM/DEM un reticolo idrografico coerente con la topografia mediante sei modelli di instradamento del deflusso: D8, D-Infinity (D∞), Rho8, MFD, MD-Infinity (MD∞) e DEMON stream-tube. Integra criteri configurabili e rigorosi per l’innesco dei canali basati su area drenata, relazione pendenza-area, SPI e TWI, mantiene la continuità dell’asse principale anche nei modelli a flusso frazionato, calcola l’ordinamento gerarchico del reticolo e applica automaticamente lo stile cartografico alle linee.
+
+description[en]=Extracts a topographically consistent hydrographic network from a DTM/DEM using six flow-routing models: D8, D-Infinity (D∞), Rho8, MFD, MD-Infinity (MD∞), and DEMON stream-tube. It provides configurable and rigorous channel-initiation criteria based on contributing area, slope–area relationships, SPI, and TWI, preserves a continuous main channel axis for fractional-flow methods, computes hierarchical stream ordering, and automatically applies cartographic line styling.
+
+about=HydroNet Studio combina Priority-Flood e sei modelli di instradamento del deflusso — D8, D∞, Rho8, MFD, MD∞ e DEMON stream-tube — per derivare da un DTM/DEM un reticolo idrografico topograficamente coerente. Il motore supporta criteri configurabili per l’innesco dei canali basati su area drenata, relazione pendenza-area, Stream Power Index (SPI) e Topographic Wetness Index (TWI). Nei metodi a flusso frazionato il routing conserva la coppia di celle riceventi prevista dal modello e mantiene un asse principale continuo senza introdurre diramazioni artificiali o dispersione cumulativa non controllata. Il reticolo risultante può essere analizzato mediante gli ordinamenti di Strahler, Shreve, Horton, Gravelius/Hack e topologico, con assegnazione automatica dello stile e della larghezza delle linee in funzione della gerarchia. L’elaborazione viene eseguita in un thread separato, mantenendo reattiva l’interfaccia e senza modificare la finestra principale di QGIS.
+
+about[en]=HydroNet Studio combines Priority-Flood with six flow-routing models — D8, D∞, Rho8, MFD, MD∞, and DEMON stream-tube — to derive a topographically consistent hydrographic network from a DTM/DEM. The engine provides configurable channel-initiation criteria based on contributing area, slope–area relationships, Stream Power Index (SPI), and Topographic Wetness Index (TWI). For fractional-flow methods, routing preserves the model-defined pair of receiving cells and maintains a continuous main channel axis without introducing artificial branches or uncontrolled cumulative dispersion. The resulting network can be analyzed using Strahler, Shreve, Horton, Gravelius/Hack, and topological stream-ordering methods, with automatic line styling and width assignment based on network hierarchy. Processing runs in a dedicated background thread, keeping the interface responsive without modifying QGIS’s main window.
+
+version=1.0.0
+
+author=Dr. Geol. Faustino Cetraro
+email=geol-faustino@libero.it
+
+category=Raster
+icon=icon.svg
+
+tags=idrologia,reticolo idrografico,DTM,DEM,Strahler,Shreve,Horton,hydrology,stream order,drainage network,watershed
+tags[en]=hydrology,stream network,DTM,DEM,Strahler,Shreve,Horton,drainage network,watershed
+
+homepage=https://github.com/drFaustino/hydronet_studio
+tracker=https://github.com/drFaustino/hydronet_studio
+repository=https://github.com/drFaustino/hydronet_studio
+
+experimental=False
+deprecated=False
+hasProcessingProvider=False
+server=False
