@@ -510,3 +510,15 @@ The principal formulations used by the engine are based on:
 * DEMON/stream-tube literature concerning the representation of flow convergence and divergence.
 
 The formulations implemented by HydroNet should be distinguished from later software-specific variants and simplified approximations found in other GIS implementations.
+
+---
+
+# Interfaces
+
+<img width="949" height="914" alt="img1" src="https://github.com/user-attachments/assets/3ecec7f9-ad14-4e4d-9068-6acf3f67c9d4" />
+
+<img width="947" height="914" alt="img2" src="https://github.com/user-attachments/assets/ed0b99f3-f578-497e-870e-fa767f7ce1de" />
+
+<img width="950" height="917" alt="img3" src="https://github.com/user-attachments/assets/117c8986-6056-4a0e-bf3d-60e34f7a43ea" />
+
+<img width="1602" height="959" alt="img4" src="https://github.com/user-attachments/assets/624c1790-4205-4804-a3ec-83504de434d7" />
