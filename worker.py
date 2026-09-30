@@ -274,59 +274,122 @@ class HydroWorker(QThread):
 
     # -- I/O ---------------------------------------------------------------
     @staticmethod
-    def _write_gpkg(path, layer_name, crs_wkt, records, int_fields, real_fields, text_fields=None):
+    def _write_gpkg(
+        path,
+        layer_name,
+        crs_wkt,
+        records,
+        int_fields,
+        real_fields,
+        text_fields=None,
+    ):
         from osgeo import ogr, osr
+
         drv = ogr.GetDriverByName("GPKG")
+
         if os.path.exists(path):
             if drv.DeleteDataSource(path) != 0:
-                raise RuntimeError(tr("Impossibile sovrascrivere '%s' (file in uso?).") % path)
+                raise RuntimeError(
+                    tr("Impossibile sovrascrivere '%s' (file in uso?).") % path
+                )
+
         ds = drv.CreateDataSource(path)
         if ds is None:
-            raise RuntimeError(tr("Impossibile creare '%s'.") % path)
+            raise RuntimeError(
+                tr("Impossibile creare '%s'.") % path
+            )
+
         srs = None
         if crs_wkt:
             srs = osr.SpatialReference()
             srs.ImportFromWkt(crs_wkt)
+
             try:
-                srs.SetAxisMappingStrategy(osr.OAMS_TRADITIONAL_GIS_ORDER)
-            except Exception:
+                srs.SetAxisMappingStrategy(
+                    osr.OAMS_TRADITIONAL_GIS_ORDER
+                )
+            except (AttributeError, RuntimeError):
+                # Older GDAL/OSR builds may not expose axis-mapping control.
+                # Keep the layer creation compatible.
                 pass
-        lyr = ds.CreateLayer(layer_name, srs, ogr.wkbLineString)
-        for f in int_fields:
-            lyr.CreateField(ogr.FieldDefn(f, ogr.OFTInteger))
-        for f in real_fields:
-            lyr.CreateField(ogr.FieldDefn(f, ogr.OFTReal))
-        for f in (text_fields or []):
-            lyr.CreateField(ogr.FieldDefn(f, ogr.OFTString))
+
+        lyr = ds.CreateLayer(
+            layer_name,
+            srs,
+            ogr.wkbLineString,
+        )
+
+        for field_name in int_fields:
+            lyr.CreateField(
+                ogr.FieldDefn(field_name, ogr.OFTInteger)
+            )
+
+        for field_name in real_fields:
+            lyr.CreateField(
+                ogr.FieldDefn(field_name, ogr.OFTReal)
+            )
+
+        for field_name in (text_fields or []):
+            lyr.CreateField(
+                ogr.FieldDefn(field_name, ogr.OFTString)
+            )
+
         defn = lyr.GetLayerDefn()
+
         lyr.StartTransaction()
+
         for rec in records:
             feat = ogr.Feature(defn)
-            for k, v in rec["attrs"].items():
-                if v is not None:
-                    feat.SetField(k, v)
-            g = ogr.Geometry(ogr.wkbLineString)
+
+            for key, value in rec["attrs"].items():
+                if value is not None:
+                    feat.SetField(key, value)
+
+            geom = ogr.Geometry(ogr.wkbLineString)
+
             for x, y in rec["geom"]:
-                g.AddPoint_2D(float(x), float(y))
-            feat.SetGeometry(g)
+                geom.AddPoint_2D(
+                    float(x),
+                    float(y),
+                )
+
+            feat.SetGeometry(geom)
             lyr.CreateFeature(feat)
             feat = None
+
         lyr.CommitTransaction()
         ds = None
 
     @staticmethod
     def _write_tif(path, arr, gt, crs_wkt):
         from osgeo import gdal
+
         rows, cols = arr.shape
         drv = gdal.GetDriverByName("GTiff")
-        ds = drv.Create(path, cols, rows, 1, gdal.GDT_Float32,
-                        options=["COMPRESS=DEFLATE", "TILED=YES"])
+
+        ds = drv.Create(
+            path,
+            cols,
+            rows,
+            1,
+            gdal.GDT_Float32,
+            options=["COMPRESS=DEFLATE", "TILED=YES"],
+        )
+
         ds.SetGeoTransform(gt)
+
         if crs_wkt:
             ds.SetProjection(crs_wkt)
+
         band = ds.GetRasterBand(1)
         band.SetNoDataValue(-9999.0)
-        out = np.where(np.isnan(arr), -9999.0, arr).astype(np.float32)
+
+        out = np.where(
+            np.isnan(arr),
+            -9999.0,
+            arr,
+        ).astype(np.float32)
+
         band.WriteArray(out)
         band.FlushCache()
         ds = None

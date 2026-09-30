@@ -1153,8 +1153,8 @@ class HydroNetDialog(QDialog):
 
             try:
                 layer.saveDefaultStyle()
-            except Exception:
-                pass
+            except Exception as exc:
+                self._log(tr("Avviso: impossibile salvare lo stile predefinito: %s") % exc)
 
             layer.triggerRepaint()
 
@@ -1256,8 +1256,8 @@ class HydroNetDialog(QDialog):
         ):
             try:
                 signal.disconnect(self._refresh_layers)
-            except (TypeError, RuntimeError):
-                pass
+            except (TypeError, RuntimeError) as exc:
+                self._log(tr("Avviso: segnale già disconnesso o non disponibile: %s") % exc)
 
 
     def showEvent(self, event):
@@ -1582,8 +1582,8 @@ class HydroNetDialog(QDialog):
                 self._log(tr("Stile %s sul campo '%s'.") % (desc, field))
                 try:
                     vl.saveDefaultStyle()
-                except Exception:
-                    pass
+                except Exception as exc:
+                    self._log(tr("Avviso: impossibile salvare lo stile predefinito: %s") % exc)
             prj.addMapLayer(vl)
         except Exception as exc:
             self._log(tr("ERRORE nel caricamento: %s") % exc)

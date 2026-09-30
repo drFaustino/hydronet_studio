@@ -45,8 +45,15 @@ def _set_draw_order(renderer, field):
         ob = QgsFeatureRequest.OrderBy([QgsFeatureRequest.OrderByClause(field, True)])
         renderer.setOrderBy(ob)
         renderer.setOrderByEnabled(True)
-    except Exception:
-        pass
+    except Exception as exc:
+        # The draw-order property is optional across QGIS renderer versions.
+        # Keep the style usable while exposing the compatibility issue to the log.
+        from qgis.core import QgsMessageLog, Qgis
+        QgsMessageLog.logMessage(
+            tr("Impossibile impostare l'ordine di disegno: %s") % exc,
+            "HydroNet Studio",
+            Qgis.Warning,
+        )
 
 
 def apply_order_style(layer, field, wmin=0.25, wmax=2.6,
